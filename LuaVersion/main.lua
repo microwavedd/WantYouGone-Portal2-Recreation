@@ -1,4 +1,5 @@
--- Carga la música
+-- NEED HELP WITH LUA LOVE VERSION, GONNA STICK TO TERMINAL VER BY NOW
+
 
 local lyrics = {
 "Well here we are again",
@@ -40,41 +41,49 @@ local lyrics = {
 "gone"
 }
 clear = 0
+local textPrinter
 local function typewriterEffect(text, x, y, delay)
     local displayedText = ""
-    local timer = coroutine.create(function()
-        for i = 1, #text do
-            displayedText = string.sub(text, 1, i)
-            love.timer.sleep(delay)
-            coroutine.yield(displayedText)
-        end
-    end)
+    local timer = 0
+    local index = 1
 
-    while coroutine.status(timer) ~= "dead" do
-        local _, partialText = coroutine.resume(timer)
-        love.graphics.print(partialText, x, y)
-        love.graphics.present()  -- Update the screen to show the partial text
+    return function(dt)
+        if index <= #text then
+            timer = timer + dt
+            if timer >= delay then
+                displayedText = displayedText .. string.sub(text, index, index)
+                index = index + 1
+                timer = 0
+            end
+        end
+        love.graphics.print(displayedText, x, y)
     end
 end
 
+
+
 function clearScreen()
-    love.graphics.setColor(0, 0, 0)  -- Set color to black
-    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())  -- Draw a black rectangle covering the entire screen
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
     clear = 1
     sleep(0.3)
     clear = 0
 end
 
 function love.load()
+    local windowWidth = love.graphics.getWidth()
+    local windowHeight = love.graphics.getHeight()
+
+
     music = love.audio.newSource("WantYouGone.mp3", "stream")
     aperture = love.graphics.newImage("apertutrer.png")
     nums = love.graphics.newImage("aperturenums.png")
     matrix = love.graphics.newImage("aperturematrix.png")
 end
 
--- Reproduce la música cuando se inicie el juego
 function love.update(dt)
     love.audio.play(music)
+    textPrinter(dt)
     
 end
 function love.draw()
@@ -82,24 +91,18 @@ function love.draw()
     local windowWidth = love.graphics.getWidth()
     local windowHeight = love.graphics.getHeight()
 
-    -- Calcula las coordenadas para la esquina superior derecha
-    local x = windowWidth - aperture:getWidth()
-    local y = 0
-    function images()
-        love.graphics.draw(aperture,x + 90 ,y,0,0.5,0.5)
-        love.graphics.draw(nums,x + 40 ,y - 2.5,0,0.5,0.5)
-        love.graphics.draw(matrix,x - 150,y,0,0.5,0.5)
-    end
-    images()
-    while clear == 0 do
-        if clear == 1 then
-            images()
-        end
-    end
+    x = windowWidth - aperture:getWidth()
+    y = 0
+    love.graphics.draw(aperture,x + 90 ,y,0,0.5,0.5)
+    love.graphics.draw(nums,x + 40 ,y - 2.5,0,0.5,0.5)
+    love.graphics.draw(matrix,x - 150,y,0,0.5,0.5)
 end
 function sleep(n)
     love.timer.sleep(n)
 end
+
+
+
 
 
 

@@ -1,6 +1,9 @@
+# NEED HELP WITH PYGAME VERSION, GONNA STICK TO TERMINAL VER BY NOW
+
 import pygame
 from pygame import mixer
-
+import time
+import sys
 
 lyrics = [
 "Well here we are again",
@@ -42,9 +45,47 @@ lyrics = [
 "gone"
 ]
 
+
+def typewriter_effect(text):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(0.05)
+    print()
+
+# Example usage:
+typewriter_effect("Hello, world!")
+
 import pygame
 pygame.init()
 pygame.mixer.init()
-pygame.mixer.music.load('WantYouGone/PythonVersion/WantYouGone.mp3')
+
+scree = pygame.display.set_mode((800,600))
+pygame.display.set_caption("WantYouGone")
+
+apertureoriginal = pygame.image.load("WantYouGone/PythonVersion/apertutrer.png").convert()
+numsoriginal = pygame.image.load("WantYouGone/PythonVersion/aperturenums.png").convert()
+matrixoriginal = pygame.image.load("WantYouGone/PythonVersion/aperturematrix.png").convert()
+
+aperture = pygame.transform.scale(apertureoriginal,(90,90))
+nums = pygame.transform.scale(numsoriginal,(40,85))
+matrix = pygame.transform.scale(matrixoriginal,(190,90))
+
+scree.blit(aperture, (710, 0))
+scree.blit(nums, (667, 5))
+scree.blit(matrix, (477, 0))
+
+scree.blit(text_surface, (100, 100))
+
+
+pygame.display.flip()
+status = True
+while (status):
+    for i in pygame.event.get():
+        if i.type == pygame.QUIT:
+            status = False
+            pygame.quit()
+
+#pygame.mixer.music.load('WantYouGone/PythonVersion/WantYouGone.mp3')
 pygame.mixer.music.play()
 
