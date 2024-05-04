@@ -1,3 +1,5 @@
+--DONT USE, ITS BUGGED AND DOENT WORK
+
 local lyrics = {
     "Well here we are again",
     "It's always such a pleasure",
